@@ -4,7 +4,7 @@
 Author: BATU1579
 Date: 2021-10-07 17:42:30
 LastEditor: BATU1579
-LastTime: 2021-12-22 14:10:59
+LastTime: 2021-12-22 22:04:01
 Description: 设置app对象(加载中间件和路由)
 '''
 import time
@@ -23,7 +23,8 @@ from .database.utils import connect_to_db, close_connection
 
 from .exception.handler import (
     validation_exception_handler,
-    http_exception_handler
+    http_exception_handler,
+    error_handler
 )
 
 app = FastAPI(
@@ -75,3 +76,4 @@ app.add_event_handler('shutdown', close_connection)
 # 注册异常处理
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(Exception, error_handler)
