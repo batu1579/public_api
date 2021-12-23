@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-22 14:40:50
 LastEditor: BATU1579
-LastTime: 2021-12-22 22:07:49
+LastTime: 2021-12-23 16:41:20
 FilePath: \\app\\exception\\error_code.py
 Description: 服务器错误码
 '''
@@ -37,6 +37,17 @@ def resource_exists(resource_name: str) -> HTTPException:
             code=409,
             info=None,
             msg=f'{resource_name} already exists'
+        )
+    )
+
+
+def field_invalid(arg_name: str, except_info: str):
+    return HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=ErrorModel(
+            code=400,
+            info=None,
+            msg=f'{arg_name} is invalid. {except_info}'
         )
     )
 
