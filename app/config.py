@@ -4,7 +4,7 @@
 Author: BATU1579
 Date: 2021-10-07 19:31:13
 LastEditor: BATU1579
-LastTime: 2021-12-22 16:07:25
+LastTime: 2021-12-22 19:44:49
 Description: 配置文件
 '''
 from os import getenv
@@ -36,8 +36,8 @@ if (MONGODB_URL is None) or (MONGODB_URL == ""):
     MONGO_HOST = getenv('MONGO_HOST', 'localhost')
     MONGO_PORT = int(getenv('MONGO_PORT', 27017))
     MONGO_USER = getenv("MONGO_USER", "admin")
-    MONGO_PWD = getenv("MONGO_PASSWORD", "123456")
-    MONGODB_URL = f'mongodb://{qp(MONGO_USER)}:{qp(MONGO_PWD)}@{qp(MONGO_HOST)}'
+    MONGO_PWD = getenv("MONGO_PWD", "123456")
+    MONGODB_URL = f'mongodb://{qp(MONGO_USER)}:{qp(MONGO_PWD)}@{qp(MONGO_HOST)}:{MONGO_PORT}'
 
 # ---------------------------------设置数据库集合名---------------------------------
 
