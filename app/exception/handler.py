@@ -4,7 +4,7 @@
 Author: BATU1579
 Date: 2021-10-10 20:37:11
 LastEditor: BATU1579
-LastTime: 2021-12-22 22:09:01
+LastTime: 2021-12-23 16:56:48
 Description: 公共异常
 '''
 from fastapi import HTTPException, status
@@ -20,8 +20,9 @@ from .error_code import ErrorModel
 # --------------------------exception handler-------------------------------
 
 async def validation_exception_handler(
-        request: Request,
-        exc: RequestValidationError) -> JSONResponse:
+    request: Request,
+    exc: RequestValidationError
+) -> JSONResponse:
     return response_error(
         error=ErrorModel(
             code=400,
@@ -37,15 +38,19 @@ async def validation_exception_handler(
 
 
 async def http_exception_handler(
-        request: Request,
-        exc: HTTPException) -> JSONResponse:
+    request: Request,
+    exc: HTTPException
+) -> JSONResponse:
     return response_error(
         error=exc.detail,
         status_code=exc.status_code
     )
 
 
-async def error_handler(request: Request, exc: Exception) -> JSONResponse:
+async def error_handler(
+    request: Request,
+    exc: Exception
+) -> JSONResponse:
     return response_error(
         error=ErrorModel(
             code=500,
