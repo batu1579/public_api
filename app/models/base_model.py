@@ -4,7 +4,7 @@
 Author: BATU1579
 Date: 2021-10-07 21:06:48
 LastEditor: BATU1579
-LastTime: 2021-12-20 23:37:10
+LastTime: 2021-12-23 16:22:38
 Description: 基类
 '''
 import abc
@@ -49,13 +49,6 @@ class InUpdateModel(BaseMongoModel, ReturnDict):
         删除掉为空的字段，只保留有更新的字段
         '''
         return {k: v for k, v in data.items() if v is not None}
-
-    def dict_hook(self):
-        '''
-        额外数据处理钩子
-        在返回格式化数据之前调用
-        '''
-        pass
 
 
 class InDBModel(BaseMongoModel, ReturnDict):
