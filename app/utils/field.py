@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-23 11:04:14
 LastEditor: BATU1579
-LastTime: 2021-12-23 15:15:12
+LastTime: 2021-12-23 23:19:21
 FilePath: \\app\\utils\\field.py
 Description: 参数校验
 '''
@@ -13,21 +13,21 @@ Description: 参数校验
 # 0 < limit <:  50
 limit_field = {
     'default': 10,
-    'gt': 0,
-    'le': 50,
+    'exclusiveMinimum': 0,
+    'exclusiveMaximum': 50,
     'description': '限制接口返回的数据条数，范围在0到50之间，默认为10'
 }
 
 # 0 < offset
 offset_field = {
     'default': 0,
-    'ge': 0,
+    'exclusiveMinimum': 0,
     'description': '跳过文档的数量'
 }
 
 id_field = {
-    'ge': 24,
-    'le': 24,
+    'exclusiveMinimum': 24,
+    'exclusiveMaximum': 24,
     'regex': r'^[0-9a-zA-Z]{24}$',
     'description': '数据对应的ObjectId'
 }
