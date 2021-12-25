@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-20 18:13:12
 LastEditor: BATU1579
-LastTime: 2021-12-24 09:59:31
+LastTime: 2021-12-25 14:18:21
 FilePath: \\app\\modules\\answer\\api\\v1\\course.py
 Description: 答案api课程接口
 '''
@@ -18,6 +18,7 @@ from ...crud.course import (
     get_many_course,
     create_course,
     update_course,
+    search_courses,
     update_course_chapters
 )
 from ...crud.del_course import (
@@ -33,7 +34,8 @@ from ...models.course import (
 )
 from ...field import (
     course_field,
-    chapters_field
+    chapters_field,
+    search_course_kw_field
 )
 from .....models.object_id import OID
 from .....utils.response import response_success
@@ -78,12 +80,21 @@ async def get_courses(
     limit: Optional[int] = Query(**limit_field),
     offset: Optional[int] = Query(**offset_field)
 ):
-    '''
-    param {int} limit 一次返回的数据条数（最大不超过50）
-    param {int} skip 跳过的数据条数
-    description: 获取课程列表
-    '''
+    '''获取课程列表'''
     courses = await get_many_course(limit=limit, skip=offset)
+    return response_success(
+        data=ManyCourseInResponse(courses=courses)
+    )
+
+
+@router.get('/courses/search')
+async def _search_courses(
+    kw: Optional[str] = Query(..., **search_course_kw_field),
+    limit: Optional[int] = Query(**limit_field),
+    offset: Optional[int] = Query(**offset_field)
+):
+    '''搜索有关键词匹配的课程'''
+    courses = await search_courses(kw, limit=limit, skip=offset)
     return response_success(
         data=ManyCourseInResponse(courses=courses)
     )

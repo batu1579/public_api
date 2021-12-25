@@ -4,13 +4,14 @@
 Author: BATU1579
 Date: 2021-11-30 08:52:07
 LastEditor: BATU1579
-LastTime: 2021-12-22 19:41:40
+LastTime: 2021-12-25 14:13:07
 Description: 问题CRUD函数
 '''
 from pymongo import DESCENDING, ReturnDocument
 from pymongo.errors import DuplicateKeyError
 from typing import List
 from bson import ObjectId
+from re import findall
 
 from ....exception.error_code import ObjectIdInvalid
 from ....database.mongo import get_collection
@@ -43,7 +44,7 @@ async def _get_ans(quary: dict) -> dict:
 
 
 async def get_ans_by_question(question: str) -> dict:
-    '''通过问题获取答案(正则匹配最相近的第一个)'''
+    '''通过问题获取答案(正则匹配的第一个)'''
     return await _get_ans({'question': {'$regex': question}})
 
 
@@ -83,13 +84,11 @@ async def get_ans_by_chapter(
     })
 
 
-async def get_ans_by_regex(
-        question: str,
-        limit: int = 5,
-        skip: int = 0) -> List[dict]:
+async def get_ans_by_regex(kw: str, limit: int, skip: int) -> List[dict]:
     '''通过不完整的问题获取问题的答案（正则表达式）'''
+    kw = findall(r'[^\+\s]+', kw)
     return await _get_many_ans(
-        {'question': {'$regex': question}},
+        {'$or': [{'question': {'$regex': ans}} for ans in kw]},
         limit=limit,
         skip=skip
     )

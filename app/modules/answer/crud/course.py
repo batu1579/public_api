@@ -4,7 +4,7 @@
 Author: BATU1579
 Date: 2021-11-26 15:59:19
 LastEditor: BATU1579
-LastTime: 2021-12-24 09:57:45
+LastTime: 2021-12-25 14:12:52
 Description: 课程crud函数
 '''
 from pymongo import (
@@ -14,6 +14,7 @@ from pymongo import (
 from pymongo.errors import DuplicateKeyError
 from typing import List
 from bson import ObjectId
+from re import findall
 
 from ....exception.error_code import ObjectIdInvalid
 from ....database.mongo import get_collection
@@ -74,22 +75,29 @@ async def is_chapter_exists(course_name: str, chapter: str) -> bool:
     return True if chapter in result.chapter else False
 
 
-async def get_many_course(limit: int, skip: int) -> List[CourseInDB]:
-    '''
-    param {int} limit 返回的数据数量
-    param {int} skip 跳过的数据条数
-    return {list[CourseInDB]}
-    description: 获取课程列表
-    '''
+async def _get_courses(quary: dict, **kwargs):
     collection = get_collection(COURSE_COLLECTION)
     cursor = collection.find(
-        limit=limit, skip=skip
+        quary, **kwargs
     ).sort('create_time', DESCENDING)
-
     data = []
     async for documents in cursor:
         data.append(CourseInDB.load_data(documents))
     return data
+
+
+async def get_many_course(limit: int, skip: int) -> List[CourseInDB]:
+    '''获取课程列表'''
+    return await _get_courses({}, limit=limit, skip=skip)
+
+
+async def search_courses(kw: str, limit: int, skip: int):
+    kw = findall(r'[^\s\+]+', kw)
+    return await _get_courses(
+        {'$or': [{'course_name': {'$regex': course}} for course in kw]},
+        limit=limit,
+        skip=skip
+    )
 
 
 async def create_course(course: CourseInCreate) -> CourseInDB:
@@ -104,7 +112,10 @@ async def create_course(course: CourseInCreate) -> CourseInDB:
     )
 
 
-async def update_course(course_name: str, course: CourseInUpdate) -> CourseInDB:
+async def update_course(
+    course_name: str,
+    course: CourseInUpdate
+) -> CourseInDB:
     '''更新一个课程的信息'''
     collection = get_collection(COURSE_COLLECTION)
     result = await collection.find_one_and_update(
@@ -117,7 +128,10 @@ async def update_course(course_name: str, course: CourseInUpdate) -> CourseInDB:
     return CourseInDB.load_data(result)
 
 
-async def update_course_chapters(course_name: str, chapters: list) -> CourseInDB:
+async def update_course_chapters(
+    course_name: str,
+    chapters: list
+) -> CourseInDB:
     '''添加课程章节'''
     collection = get_collection(COURSE_COLLECTION)
     result = await collection.find_one_and_update(

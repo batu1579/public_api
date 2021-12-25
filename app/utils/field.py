@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-23 11:04:14
 LastEditor: BATU1579
-LastTime: 2021-12-23 23:19:21
+LastTime: 2021-12-25 13:04:45
 FilePath: \\app\\utils\\field.py
 Description: 参数校验
 '''
@@ -37,6 +37,14 @@ description_field = {
     'max_length': 100,
     'regex': r'^[^;\'\$\*\/\\\-]+$',
     'description': '对资源的详细描述'
+}
+
+
+search_kw_field = {
+    'min_length': 1,
+    'max_length': 100,
+    'example': 'keywords1 keywords2',
+    'description': '用于查询的关键词，中间以空格或者加号连接'
 }
 
 # r'^[^;\'\$\*\/\\\-]+$' 谨防注入 :)

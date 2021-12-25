@@ -4,10 +4,11 @@
 Author: BATU1579
 CreateDate: 2021-12-23 13:28:43
 LastEditor: BATU1579
-LastTime: 2021-12-24 12:17:23
+LastTime: 2021-12-25 14:05:12
 FilePath: \\app\\modules\\answer\\field.py
 Description: 答案api的字段检查
 '''
+from ...utils.field import search_kw_field
 
 
 course_field = {
@@ -45,7 +46,7 @@ question_field = {
     'max_length': 100,
     'description': '题目全文，力求完整',
     'example': '计算机界的最高奖项是？',
-    'regex': r'^[\$]$'
+    'regex': r'^[^\$]+$'
 }
 
 answer_field = {
@@ -57,4 +58,14 @@ answer_field = {
         'Option[A]',
         '阿兰·图灵'
     ]
+}
+
+search_course_kw_field = {
+    'regex': r'^[\u4e00-\u9fa5a-zA-Z0-9\-\s\+]+$',
+    **search_kw_field
+}
+
+search_question_kw_field = {
+    'regex': r'^[^\$]+$',
+    **search_kw_field
 }

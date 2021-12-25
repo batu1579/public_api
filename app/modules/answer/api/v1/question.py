@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-20 18:13:24
 LastEditor: BATU1579
-LastTime: 2021-12-23 22:28:55
+LastTime: 2021-12-25 14:18:41
 FilePath: \\app\\modules\\answer\\api\\v1\\question.py
 Description: 答案api问题接口
 '''
@@ -27,7 +27,8 @@ from ...field import (
     course_field,
     chapter_field,
     question_field,
-    answer_field
+    answer_field,
+    search_question_kw_field
 )
 from ...models.question import (
     QuestionInCreate,
@@ -77,14 +78,14 @@ async def get_chapter_ans(
     return response_success(data=ManyQuestionsInResponse(questions=anses))
 
 
-@router.get('/questions/{question}')
+@router.get('/questions/search')
 async def search_ans(
-    question: Optional[str] = Path(..., **question_field),
+    kw: Optional[str] = Query(..., **search_question_kw_field),
     limit: Optional[int] = Query(**limit_field),
     offset: Optional[int] = Query(**offset_field)
 ):
     '''通过正则表达式查询答案'''
-    anses = await get_ans_by_regex(question, limit, offset)
+    anses = await get_ans_by_regex(kw, limit, offset)
     return response_success(data=ManyQuestionsInResponse(questions=anses))
 
 
