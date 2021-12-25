@@ -123,8 +123,10 @@ async def _update_course(
     description: Optional[str] = Form(None, **description_field)
 ):
     '''更新课程信息'''
-    if (new_course_name is None) and (description is None):
-        return {"msg": "Why do you want to update without new data?"}
+    if new_course_name == description and (description is None):
+        return response_success(
+            msg="Why do you want to update without new data?"
+        )
     course_data = CourseInUpdate(
         course_name=new_course_name,
         description=description

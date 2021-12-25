@@ -116,8 +116,10 @@ async def _update_question(
     course_name: Optional[str] = Form(None, **course_field),
     chapter: Optional[str] = Form(None, **chapter_field)
 ):
-    if (question == answer == course_name == chapter and answer is None):
-        return {"msg": "Why do you want to update without new data?"}
+    if (question == answer == course_name == chapter and (answer is None)):
+        return response_success(
+            msg="Why do you want to update without new data?"
+        )
     que_obj = QuestionInUpdate(
         question=question,
         answer=answer.answer,
