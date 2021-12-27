@@ -4,11 +4,13 @@
 Author: BATU1579
 CreateDate: 2021-12-26 23:23:21
 LastEditor: BATU1579
-LastTime: 2021-12-26 23:36:39
+LastTime: 2021-12-27 12:56:00
 FilePath: \\app\\modules\\sentence\\models\\sentence.py
 Description: 句子数据类
 '''
+from re import match
 from typing import Optional, List
+from pydantic import BaseModel, validator
 
 from ....models.base_model import (
     BaseMongoModel,
@@ -16,13 +18,23 @@ from ....models.base_model import (
     InDBModel,
     CreateTime
 )
-from ....models.object_id import OID
+from ..exception import TagInvalid
+
+
+class Tags(BaseModel):
+    tags: Optional[List[str]] = []
+
+    @validator('tags', each_item=True)
+    def check_tags(cls, v):
+        if match(r'^[\u4e00-\u9fa5a-zA-Z0-9]+$', v) is None:
+            raise TagInvalid
+        return v
 
 
 class BaseSentence(BaseMongoModel, CreateTime):
     sentence: str
-    citations: str
-    tags: List[OID]
+    attribution: str
+    tags: List[str]
 
 
 class SentenceInCreate(BaseSentence):
@@ -35,8 +47,8 @@ class SentenceInDB(InDBModel, BaseSentence):
 
 class SentenceInUpdate(InUpdateModel):
     sentence: Optional[str] = None
-    citations: Optional[str] = None
-    tags: Optional[List[OID]] = None
+    attribution: Optional[str] = None
+    tags: Optional[List[str]] = None
 
 
 class SentenceInResponse(BaseMongoModel):

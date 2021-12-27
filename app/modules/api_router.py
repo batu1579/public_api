@@ -9,6 +9,7 @@ Description: 设置公共API路由
 '''
 from fastapi import APIRouter
 
+from .sentence.router import router as r_sentence
 from .answer.router import router as r_answer
 
 
@@ -17,4 +18,5 @@ public_api_router = APIRouter(
     tags=['公共api']
 )
 
+public_api_router.include_router(r_sentence)
 public_api_router.include_router(r_answer)
