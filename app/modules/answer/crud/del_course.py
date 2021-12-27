@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-20 21:36:27
 LastEditor: BATU1579
-LastTime: 2021-12-21 20:28:53
+LastTime: 2021-12-27 10:31:37
 FilePath: \\app\\modules\\answer\\crud\\del_course.py
 Description: 课程的删除操作
 '''
@@ -25,7 +25,8 @@ async def delete_course(course_name: str) -> CourseInDB:
     await delete_question_by_course(course_name)
     collection = get_collection(COURSE_COLLECTION)
     result = await collection.find_one_and_delete(
-        {'course_name': course_name}
+        {'course_name': course_name},
+        return_document=ReturnDocument.AFTER
     )
     if result is None:
         raise CourseNotFound
