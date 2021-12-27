@@ -4,7 +4,7 @@
 Author: BATU1579
 Date: 2021-11-26 15:59:19
 LastEditor: BATU1579
-LastTime: 2021-12-25 14:12:52
+LastTime: 2021-12-27 10:22:29
 Description: 课程crud函数
 '''
 from pymongo import (
@@ -92,6 +92,7 @@ async def get_many_course(limit: int, skip: int) -> List[CourseInDB]:
 
 
 async def search_courses(kw: str, limit: int, skip: int):
+    '''查找课程'''
     kw = findall(r'[^\s\+]+', kw)
     return await _get_courses(
         {'$or': [{'course_name': {'$regex': course}} for course in kw]},

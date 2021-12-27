@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-20 18:13:24
 LastEditor: BATU1579
-LastTime: 2021-12-25 14:18:41
+LastTime: 2021-12-27 17:16:03
 FilePath: \\app\\modules\\answer\\api\\v1\\question.py
 Description: 答案api问题接口
 '''
@@ -96,6 +96,7 @@ async def _create_question(
     course_name: Optional[str] = Form(..., **course_field),
     chapter: Optional[str] = Form(..., **chapter_field)
 ):
+    '''创建新的问题和答案'''
     course_id = await get_course_id(course_name)
     que_obj = QuestionInCreate(
         question=question,
@@ -103,7 +104,6 @@ async def _create_question(
         course=ObjectId(course_id),
         chapter=chapter
     )
-    '''创建新的问题和答案'''
     result = await create_question(course_name, que_obj)
     return response_success(data=DetailQuestionInResponse(question=result))
 
