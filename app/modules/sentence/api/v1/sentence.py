@@ -4,7 +4,7 @@
 Author: BATU1579
 CreateDate: 2021-12-27 10:32:15
 LastEditor: BATU1579
-LastTime: 2021-12-27 13:12:34
+LastTime: 2021-12-27 21:04:46
 FilePath: \\app\\modules\\sentence\\api\\v1\\sentence.py
 Description: 一言api句子接口
 '''
@@ -48,13 +48,14 @@ router = APIRouter(tags=['句子操作'])
 
 @router.get('/sentence')
 async def _get_sentence(
-    sentence_tags: Optional[Tags] = Form(None, **tags_field),
+    sentence_tags: Optional[list] = Form(None, **tags_field),
     strict_match: Optional[bool] = Form(True, **strict_match_field),
     attribution: Optional[str] = Form(None, **attribution_field)
 ):
     '''获取单个句子'''
+    sentence_tags = Tags(tags=sentence_tags)
     sentence = await get_sentence(
-        tags=sentence_tags.tags,
+        tags=sentence_tags.tags if sentence_tags else None,
         strict_match=strict_match,
         attribution=attribution
     )
@@ -76,16 +77,17 @@ async def _get_sentence_by_id(
 
 @router.get('/sentences')
 async def _get_sentences(
-    sentence_tags: Optional[Tags] = Form(None, **tags_field),
+    sentence_tags: Optional[list] = Form(None, **tags_field),
     strict_match: Optional[bool] = Form(True, **strict_match_field),
     attribution: Optional[str] = Form(None, **attribution_field),
     limit: Optional[int] = Query(**limit_field),
     offset: Optional[int] = Query(**offset_field)
 ):
     '''获取多个句子'''
+    sentence_tags = Tags(tags=sentence_tags)
     sentences = await get_sentences(
         limit, offset,
-        tags=sentence_tags.tags,
+        tags=sentence_tags.tags if sentence_tags else None,
         strict_match=strict_match,
         attribution=attribution
     )
@@ -110,14 +112,15 @@ async def _search_sentences(
 @router.post('/sentence')
 async def _create_sentence(
     sentence: Optional[str] = Form(..., **sentence_field),
-    attribution: Optional[str] = Form('佚名', **attribution_field),
-    sentence_tags: Optional[Tags] = Form(..., **tags_field),
+    sentence_tags: Optional[list] = Form(..., **tags_field),
+    attribution: Optional[str] = Form('佚名', **attribution_field)
 ):
     '''新建句子'''
+    sentence_tags = Tags(tags=sentence_tags)
     sentence = SentenceInCreate(
         sentence=sentence,
         attribution=attribution,
-        tags=sentence_tags.tags
+        tags=sentence_tags.tags if sentence_tags else None
     )
     sentence = await create_sentence(sentence)
     return response_success(
@@ -129,14 +132,15 @@ async def _create_sentence(
 async def _update_sentence(
     sentence_id: Optional[str] = Path(..., **id_field),
     sentence: Optional[str] = Form(None, **sentence_field),
-    attribution: Optional[str] = Form(None, **attribution_field),
-    sentence_tags: Optional[Tags] = Form(None, **tags_field)
+    sentence_tags: Optional[list] = Form(None, **tags_field),
+    attribution: Optional[str] = Form(None, **attribution_field)
 ):
     '''更新句子'''
+    sentence_tags = Tags(tags=sentence_tags)
     sentence = SentenceInUpdate(
         sentence=sentence,
         attribution=attribution,
-        tags=sentence_tags.tags
+        tags=sentence_tags.tags if sentence_tags else None
     )
     sentence = await update_sentence(ObjectId(sentence_id), sentence)
     return response_success(
